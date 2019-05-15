@@ -1,0 +1,34 @@
+ARG BUILD_USER=build
+ARG APPLICATION_USER=application
+
+FROM node:10-alpine
+
+ARG APPLICATION_USER
+ARG BUILD_USER
+ENV applicationUser=$APPLICATION_USER
+ENV buildUser=$BUILD_USER
+
+RUN addgroup -S appgroup && adduser -S $applicationUser -G appgroup
+
+RUN apk add --update --no-cache \
+    python \
+    make \
+    g++
+
+USER $applicationUser
+
+WORKDIR /home/$applicationUser
+
+COPY package*.json ./
+
+RUN npm ci
+
+COPY . .
+
+RUN npm run test
+
+RUN npm run build
+
+EXPOSE 4444
+
+CMD ["node", "./dist/server.js"]

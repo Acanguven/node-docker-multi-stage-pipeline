@@ -112,8 +112,6 @@ COPY --from=install /tmp/production_modules node_modules
 # Copy the builded code from line 29
 COPY --from=build /home/$buildUser/dist dist
 
-RUN ls -r dist
-
 # Expose port
 EXPOSE 4444
 

@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "ESNEXT",
     "module": "commonjs",
+    "outDir": "./dist",
     "strict": true,
     "types": [
       "node",

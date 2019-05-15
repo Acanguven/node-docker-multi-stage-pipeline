@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "jest",
-    "build": "tsc"
+    "build": "node_modules/.bin/tsc"
   },
   "author": "",
   "license": "ISC",
