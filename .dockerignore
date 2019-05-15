@@ -1,0 +1,8 @@
+# Other unnecessary non-runtime stuff.
+coverage
+
+# Dist is useless because it will written by docker build stage
+dist
+
+# Node modules must be cached in order to create context faster
+node_modules
