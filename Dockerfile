@@ -1,11 +1,18 @@
 ###################################################
 #
+# Configuration
+#
+###################################################
+ENV BUILD_USER=build
+ENV APPLICATION_USER=application
+ENV NODE_VERSION=10
+
+###################################################
+#
 # Build OS Setup Stage
 #
 ###################################################
-
-# Base image alpine node 10
-FROM node:10-alpine AS os
+FROM node:${NODE_VERSION}-alpine AS os
 
 # Build dependencies for most nodejs builds
 RUN apk add --update --no-cache \
@@ -14,13 +21,13 @@ RUN apk add --update --no-cache \
     g++
 
 # Create node user
-RUN addgroup -S appgroup && adduser -S build -G appgroup
+RUN addgroup -S appgroup && adduser -S $BUILD_USER -G appgroup
 
 # Create nonroot secure application user
-USER build
+USER $BUILD_USER
 
 # Set workdir as user folder
-WORKDIR /home/build
+WORKDIR /home/$BUILD_USER
 
 ###################################################
 #
@@ -78,22 +85,22 @@ RUN npm run build
 # Production Stage
 #
 ###################################################
-FROM node:10-alpine
+FROM node:${NODE_VERSION}-alpine
 
 # Create node user
-RUN addgroup -S appgroup && adduser -S application -G appgroup
+RUN addgroup -S appgroup && adduser -S $APPLICATION_USER -G appgroup
 
 # Create nonroot secure application user
-USER application
+USER $APPLICATION_USER
 
 # Set workdir as user folder
-WORKDIR /home/application
+WORKDIR /home/$APPLICATION_USER
 
 # Copy production dependencies from the pruned stage at line 32
 COPY --from=install /tmp/production_modules node_modules
 
 # Copy the builded code from line 29
-COPY --from=build /home/build/dist dist
+COPY --from=build /home/$BUILD_USER/dist dist
 
 # Expose port
 EXPOSE 4444
