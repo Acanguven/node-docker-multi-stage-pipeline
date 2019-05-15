@@ -14,6 +14,7 @@ ARG NODE_VERSION=10
 ###################################################
 FROM node:${NODE_VERSION}-alpine AS os
 
+# Load global arguments with default values to variables in stage context
 ARG BUILD_USER
 ENV buildUser=$BUILD_USER
 
@@ -90,6 +91,7 @@ RUN npm run build
 ###################################################
 FROM node:${NODE_VERSION}-alpine
 
+# Load global arguments with default values to variables in stage context
 ARG APPLICATION_USER
 ARG BUILD_USER
 ENV applicationUser=$APPLICATION_USER
