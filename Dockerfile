@@ -3,9 +3,9 @@
 # Configuration
 #
 ###################################################
-ENV BUILD_USER=build
-ENV APPLICATION_USER=application
-ENV NODE_VERSION=10
+ARG BUILD_USER=build
+ARG APPLICATION_USER=application
+ARG NODE_VERSION=10
 
 ###################################################
 #
@@ -14,6 +14,9 @@ ENV NODE_VERSION=10
 ###################################################
 FROM node:${NODE_VERSION}-alpine AS os
 
+ARG BUILD_USER
+ENV buildUser=$BUILD_USER
+
 # Build dependencies for most nodejs builds
 RUN apk add --update --no-cache \
     python \
@@ -21,13 +24,13 @@ RUN apk add --update --no-cache \
     g++
 
 # Create node user
-RUN addgroup -S appgroup && adduser -S $BUILD_USER -G appgroup
+RUN addgroup -S appgroup && adduser -S $buildUser -G appgroup
 
 # Create nonroot secure application user
-USER $BUILD_USER
+USER $buildUser
 
 # Set workdir as user folder
-WORKDIR /home/$BUILD_USER
+WORKDIR /home/$buildUser
 
 ###################################################
 #
@@ -87,20 +90,27 @@ RUN npm run build
 ###################################################
 FROM node:${NODE_VERSION}-alpine
 
+ARG APPLICATION_USER
+ARG BUILD_USER
+ENV applicationUser=$APPLICATION_USER
+ENV buildUser=$BUILD_USER
+
 # Create node user
-RUN addgroup -S appgroup && adduser -S $APPLICATION_USER -G appgroup
+RUN addgroup -S appgroup && adduser -S $applicationUser -G appgroup
 
 # Create nonroot secure application user
-USER $APPLICATION_USER
+USER $applicationUser
 
 # Set workdir as user folder
-WORKDIR /home/$APPLICATION_USER
+WORKDIR /home/$applicationUser
 
 # Copy production dependencies from the pruned stage at line 32
 COPY --from=install /tmp/production_modules node_modules
 
 # Copy the builded code from line 29
-COPY --from=build /home/$BUILD_USER/dist dist
+COPY --from=build /home/$buildUser/dist dist
+
+RUN ls -r dist
 
 # Expose port
 EXPOSE 4444
