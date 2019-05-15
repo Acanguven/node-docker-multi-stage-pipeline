@@ -6,7 +6,7 @@ One of the challenges facing Nodejs developers is providing a reliable build, te
 
 To solve this issue we use Docker multi-stage pipeline. Checkout [Dockerfile](./Dockerfile) for better understanding
 
-## [Multi-stage pipeline](,/Dockerfile) 
+## [Multi-stage pipeline](./Dockerfile) 
 ### no-cache run
 ```bash
 time docker build . -t optimized --no-cache
@@ -22,7 +22,7 @@ time docker build . -t optimized
 * Image Size: 73MB
 
 
-## [Unoptimized pipeline](,/Dockerfile_unoptimized)
+## [Unoptimized pipeline](./Dockerfile_unoptimized)
 ### no-cache run
 ```bash
 time docker build -f Dockerfile_unoptimized . -t unoptimized --no-cache
