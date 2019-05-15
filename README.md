@@ -19,7 +19,7 @@ time docker build . -t optimized --no-cache
 time docker build . -t optimized 
 ```
 * Duration: 10.790 seconds
-* Image Size: 374MB
+* Image Size: 73MB
 
 
 ## [Unoptimized pipeline](,/Dockerfile_unoptimized)
