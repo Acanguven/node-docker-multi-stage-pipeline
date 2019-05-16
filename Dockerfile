@@ -109,7 +109,7 @@ WORKDIR /home/$applicationUser
 # Copy production dependencies from the pruned stage at line 50
 COPY --from=install /tmp/production_modules node_modules
 
-# Copy the builded code from line 76
+# Copy the built code from line 76
 COPY --from=build /home/$buildUser/dist dist
 
 # Expose port
